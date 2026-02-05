@@ -4,6 +4,9 @@ import numpy as np
 import field as fd
 import sides as sides
 
+# Мало б працювати як розставлення сторін тільки є пару дефектів
+
+
 class ArrangementShip:
     def __init__(self):
         self.idx = None

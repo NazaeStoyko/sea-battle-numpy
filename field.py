@@ -1,5 +1,6 @@
 import numpy as np
 
+# Створення полів
 
 class Fields:
     field_user = np.zeros(shape=(10, 10), dtype=int)
