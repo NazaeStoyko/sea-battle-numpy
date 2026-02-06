@@ -2,8 +2,6 @@ import ships
 import field as fd
 
 
-# Вибір сторони
-
 class Sides:
     def __init__(self):
         self.field = fd.Fields()

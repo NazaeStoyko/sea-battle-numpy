@@ -1,7 +1,6 @@
 import numpy as np
 # import field as fd
 
-# Постріли бота не до пиляно
 
 class GetCoordinates:
 
