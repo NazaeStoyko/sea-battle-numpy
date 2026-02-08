@@ -44,7 +44,7 @@ class Field:
         ship_direction: ShipDirection,
         direction: Direction,
     ):
-#problem start_row - 1 + length <= 10
+
         if ship_direction == ShipDirection.Vertical:
             if direction == Direction.North:
                 return start_row + 1 - length >= 0
@@ -55,12 +55,14 @@ class Field:
                 return False
 
 
-# Problem with start_col - 1 - length >= 0   (Done)
+# Problem with return start_col + 1 + length <= 10
         elif ship_direction == ShipDirection.Horizontal:
             if direction == Direction.East:
-                return start_col + 1 + length <= 10
-            elif direction == Direction.West:
+                return start_col - 1 + length <= 10
+
+            if direction == Direction.West:
                 return start_col + 1 - length >= 0
+
             else:
                 return False
         else:
@@ -89,6 +91,7 @@ class Field:
                 return False
         elif ship_direction == ShipDirection.Horizontal:
             if direction == Direction.East:
+#Here is "index 10 is out of bounds for axis 1 with size 10"
                 for i in range(length):
                     if self.field[start_row, start_col + i] != 0:
                         return False
