@@ -3,7 +3,7 @@ import field as fd
 
 def main():
     field_user = fd.Field()
-    field_user.draw_ship(5, 5, 7, fd.ShipDirection.Horizontal, fd.Direction.East)
+    field_user.draw_ship(5, 5, 5, fd.ShipDirection.Vertical, fd.Direction.South)
 
     print(field_user.field)
 

@@ -50,18 +50,18 @@ class Field:
                 return start_row + 1 - length >= 0
 
             if direction == Direction.South:
-                return start_row - 1 + length <= 10
+                return start_row - 1 + length <= 9
             else:
                 return False
 
 
-# Problem with return start_col + 1 + length <= 10
+# Problem with return start_col - 1 + length <= 10
         elif ship_direction == ShipDirection.Horizontal:
             if direction == Direction.East:
-                return start_col - 1 + length <= 10
+                return start_col + 1 + length <= 11
 
             if direction == Direction.West:
-                return start_col + 1 - length >= 0
+                return start_col - 1 - length >= 0
 
             else:
                 return False
@@ -82,6 +82,7 @@ class Field:
                     if self.field[start_row - i, start_col] != 0:
                         return False
                 return True
+# Here is "index 10 is out of bounds for axis 1 with size 10"
             elif direction == Direction.South:
                 for i in range(length):
                     if self.field[start_row + i, start_col] != 0:
@@ -89,9 +90,9 @@ class Field:
                 return True
             else:
                 return False
+# Here is "index 10 is out of bounds for axis 1 with size 10"
         elif ship_direction == ShipDirection.Horizontal:
             if direction == Direction.East:
-#Here is "index 10 is out of bounds for axis 1 with size 10"
                 for i in range(length):
                     if self.field[start_row, start_col + i] != 0:
                         return False
@@ -137,20 +138,20 @@ class Field:
         ship_direction: ShipDirection,
         direction: Direction,
     ):
-        print("Drawing ship...")
-        print("Start row:", start_row, "Start col:", start_col)
-        print(
-            "validate size:",
-            self.validate_ship_size(
-                start_row, start_col, length, ship_direction, direction
-            ),
-        )
-        print(
-            "validate place:",
-            self.validate_ship_place(
-                start_row, start_col, length, ship_direction, direction
-            ),
-        )
+        # print("Drawing ship...")
+        # print("Start row:", start_row, "Start col:", start_col)
+        # print(
+        #     "validate size:",
+        #     self.validate_ship_size(
+        #         start_row, start_col, length, ship_direction, direction
+        #     ),
+        # )
+        # print(
+        #     "validate place:",
+        #     self.validate_ship_place(
+        #         start_row, start_col, length, ship_direction, direction
+        #     ),
+        # )
         if self.validate_ship_size(
             start_row, start_col, length, ship_direction, direction
         ) and self.validate_ship_place(
