@@ -1,5 +1,8 @@
 import numpy as np
 from enum import Enum
+import random
+
+from numpy.ma.extras import compress_cols
 
 
 class ShipDirection(Enum):
@@ -138,18 +141,20 @@ class Field:
             (ShipDirection.Vertical, Direction.South),
         ]
 
-        for i in range(len(directions)):
-            ship_direction, direction = directions[i]
-            is_ship_size_valid = self.validate_ship_size(
-                start_row, start_col, length, ship_direction, direction
-            )
-            is_ship_place_valid = self.validate_ship_place(
-                start_row, start_col, length, ship_direction, direction
-            )
-            if is_ship_size_valid and is_ship_place_valid:
-                return ship_direction, direction
-            else:
-                return None
+        valid_directions = []
+
+        for ship_direction, direction in directions:
+            if (
+                    self.validate_ship_size(start_row, start_col, length, ship_direction, direction)
+                    and
+                    self.validate_ship_place(start_row, start_col, length, ship_direction, direction)
+            ):
+                valid_directions.append((ship_direction, direction))
+
+        if not valid_directions:
+            return None
+
+        return random.choice(valid_directions)
 
     def draw_ship(
         self,
@@ -173,12 +178,37 @@ class Field:
             print("Ship is not valid")
             return False
 
+    # def scaner():
+    #return None
+    
+    # def create_scope(self, row, col):
+    #     row0 = max(0, row - 1)
+    #     row1 = min(self.field.shape[0], row + 2)
+    #     col0 = max(0, col - 1)
+    #     col1 = min(self.field.shape[1], col + 2)
+    #
+    #     for i in range(row0, row1):
+    #         for j in range(col0, col1):
+    #             if (i, j) != (row, col):
+    #                 self.field[i, j] = 2
+    
+    
+
     def delete_allowed_places(self, row, col):
         unparse_coordinates = self.unparse_place(row, col)
-        dx = np.where(self.allowed_places == unparse_coordinates)
+        ind = np.where(self.allowed_places == unparse_coordinates)
+        
+        # row0 = max(0, row - 1)
+        # row1 = min(self.field.shape[0], row + 2)
+        # col0 = max(0, col - 1)
+        # col1 = min(self.field.shape[1], col + 2)
+        #
+        # for i in range(row0, row1):
+        #     for j in range(col0, col1):
+        #         if (i, j) != (row, col):
+        #             self.field[i, j] = 2
 
-
-        self.allowed_places =  np.delete(self.allowed_places,dx)
+        self.allowed_places =  np.delete(self.allowed_places,ind)
         print("Delete allowed coordinates: unparse_coordinates:", unparse_coordinates)
         print("allowed_places deleted: ", self.allowed_places)
         print("\t")
