@@ -207,17 +207,8 @@ class Field:
             print("Ship is not valid")
             return False
 
-    # def scaner():
-    #return None
-    
-    
-    # def draw_cell(self, start_row, start_col):
-    #
-    #     self.field[start_row, start_col] = CellType.Ship
-    #     # self.field[start_row, start_col] = CellType.Border
-    #     self.delete_allowed_places(start_row, start_col)
-    
-    
+
+
     def draw_borders(self, row,col, length,  ship_direction, direction):
        
         if ship_direction == ShipDirection.Horizontal:
@@ -242,14 +233,7 @@ class Field:
                 #     start_row, start_col = navigation.west_center(row, col)
                 #     self.draw_cell(start_row, start_col, kind="border")
 
-        #         print()
-        #     elif direction == Direction.East:
-        #         print()
-        # if ship_direction == ShipDirection.Vertical:
-        #     if direction == Direction.North:
-        #         print()
-        #     if direction == Direction.South:
-        #         print()
+
     
 
     def delete_allowed_places(self, row, col):
