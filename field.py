@@ -1,10 +1,18 @@
-import numpy as np
-from enum import Enum
-import random
+from curses import start_color
 
+import numpy as np
+import random
+import navigation
+from enum import IntEnum
+from enum import Enum
 from numpy.ma.extras import compress_cols
 
-
+class CellType(IntEnum):
+    Empty = 0
+    Ship = 1
+    Border = 2
+    Damaged = 3
+    
 class ShipDirection(Enum):
     Vertical = "V"
     Horizontal = "H"
@@ -38,9 +46,18 @@ class Field:
         return  start_row * 10 + start_col
 
 
-    def draw_cell(self, start_row, start_col):
-        self.field[start_row, start_col] = 1
+    def draw_cell(self, start_row, start_col,kind):
+     
+        
+    
+        if kind == "ship":
+            self.field[start_row, start_col] = CellType.Ship
+        if kind == "border":
+            self.field[start_row, start_col] = CellType.Border
+            
         self.delete_allowed_places(start_row, start_col)
+        
+        
 
     def validate_ship_size(
         self,
@@ -115,30 +132,37 @@ class Field:
         start_col,
         length,
         ship_direction: ShipDirection,
-        direction: Direction,
+        direction: Direction
     ):
+        kind = "ship"
         if ship_direction == ShipDirection.Vertical:
             if direction == Direction.North:
                 for i in range(length):
-                    self.draw_cell(start_row - i, start_col)
+                    self.draw_cell(start_row - i, start_col,kind)
             elif direction == Direction.South:
                 for i in range(length):
-                    self.draw_cell(start_row + i, start_col)
+                    self.draw_cell(start_row + i, start_col,kind)
         elif ship_direction == ShipDirection.Horizontal:
             if direction == Direction.East:
                 for i in range(length):
-                    self.draw_cell(start_row, start_col + i)
+                    row = start_row
+                    col = start_col + i
+                    self.draw_cell(row, col,kind)
+                    self.draw_borders(row, col, length, ship_direction, direction)
             elif direction == Direction.West:
                 for i in range(length):
-                    self.draw_cell(start_row, start_col - i)
+                    row = start_row
+                    col = start_col- i
+                    self.draw_cell(row, col,kind)
+                    self.draw_borders(row, col,length,ship_direction,direction)
 
 
     def where_to_draw(self, start_row, start_col, length):
         directions = [
             (ShipDirection.Horizontal, Direction.West),
             (ShipDirection.Horizontal, Direction.East),
-            (ShipDirection.Vertical, Direction.North),
-            (ShipDirection.Vertical, Direction.South),
+            # (ShipDirection.Vertical, Direction.North),
+            # (ShipDirection.Vertical, Direction.South),
         ]
 
         valid_directions = []
@@ -149,6 +173,7 @@ class Field:
                     and
                     self.validate_ship_place(start_row, start_col, length, ship_direction, direction)
             ):
+                
                 valid_directions.append((ship_direction, direction))
 
         if not valid_directions:
@@ -170,9 +195,13 @@ class Field:
         ) and self.validate_ship_place(
             start_row, start_col, length, ship_direction, direction
         ):
+            
             self.unsafe_draw_ship(
                 start_row, start_col, length, ship_direction, direction
             )
+            # self.draw_borders(start_row, start_col, length, ship_direction, direction)
+            
+            
             return True
         else:
             print("Ship is not valid")
@@ -181,32 +210,51 @@ class Field:
     # def scaner():
     #return None
     
-    # def create_scope(self, row, col):
-    #     row0 = max(0, row - 1)
-    #     row1 = min(self.field.shape[0], row + 2)
-    #     col0 = max(0, col - 1)
-    #     col1 = min(self.field.shape[1], col + 2)
-    #
-    #     for i in range(row0, row1):
-    #         for j in range(col0, col1):
-    #             if (i, j) != (row, col):
-    #                 self.field[i, j] = 2
     
+    # def draw_cell(self, start_row, start_col):
+    #
+    #     self.field[start_row, start_col] = CellType.Ship
+    #     # self.field[start_row, start_col] = CellType.Border
+    #     self.delete_allowed_places(start_row, start_col)
+    
+    
+    def draw_borders(self, row,col, length,  ship_direction, direction):
+       
+        if ship_direction == ShipDirection.Horizontal:
+            if direction == Direction.West:
+                if row > 0:
+                    start_row,start_col= navigation.west_noeth_west(row, col)
+                    self.draw_cell(start_row, start_col, kind="border")
+                if row<9:
+                    start_row, start_col = navigation.west_south_west(row, col)
+                    self.draw_cell(start_row, start_col, kind="border")
+            if direction == Direction.East:
+                if row>0:
+                    start_row, start_col = navigation.east_noeth_east(row, col)
+                    self.draw_cell(start_row, start_col, kind="border")
+                if row<9:
+                    start_row, start_col = navigation.east_south_east(row, col)
+                    self.draw_cell(start_row, start_col, kind="border")
+                # if col > 0:
+                #     start_row, start_col = navigation.east_center(row, col)
+                #     self.draw_cell(start_row, start_col, kind="border")
+                # if col<9:
+                #     start_row, start_col = navigation.west_center(row, col)
+                #     self.draw_cell(start_row, start_col, kind="border")
+
+        #         print()
+        #     elif direction == Direction.East:
+        #         print()
+        # if ship_direction == ShipDirection.Vertical:
+        #     if direction == Direction.North:
+        #         print()
+        #     if direction == Direction.South:
+        #         print()
     
 
     def delete_allowed_places(self, row, col):
         unparse_coordinates = self.unparse_place(row, col)
         ind = np.where(self.allowed_places == unparse_coordinates)
-        
-        # row0 = max(0, row - 1)
-        # row1 = min(self.field.shape[0], row + 2)
-        # col0 = max(0, col - 1)
-        # col1 = min(self.field.shape[1], col + 2)
-        #
-        # for i in range(row0, row1):
-        #     for j in range(col0, col1):
-        #         if (i, j) != (row, col):
-        #             self.field[i, j] = 2
 
         self.allowed_places =  np.delete(self.allowed_places,ind)
         print("Delete allowed coordinates: unparse_coordinates:", unparse_coordinates)
