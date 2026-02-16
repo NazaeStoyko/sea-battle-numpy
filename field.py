@@ -82,7 +82,7 @@ class Field:
                 return start_col + 1 + length <= 10
 
             if direction == Direction.West:
-                return start_col - 1 - length >= -2
+                return start_col - 1 - length >= 0
 
             else:
                 return False
@@ -125,7 +125,8 @@ class Field:
                 return True
             else:
                 return False
-
+        return None
+    
     def unsafe_draw_ship(
         self,
         start_row,
@@ -205,39 +206,49 @@ class Field:
        
         if ship_direction == ShipDirection.Horizontal:
             if direction == Direction.West:
-                for i in range(length):
-                    if row > 0:
-                        start_row,start_col= navigation.north(row, col-i)
-                        self.draw_cell(start_row, start_col, kind="border")
-                    if row < 9:
-                        start_row, start_col = navigation.south(row, col-i)
-                        self.draw_cell(start_row, start_col, kind="border")
-                    if col < 9:
-                        if i == 0:
-                            start_row, start_col = navigation.west_right_center(row, col - i)
-                            self.draw_cell(start_row, start_col, kind="border")
-                    if col > 0:
-                        if i+1 == length:
-                            start_row, start_col = navigation.west_left_center(row, col - i)
-                            self.draw_cell(start_row, start_col, kind="border")
-                    if row <9 and col < 9:
-                        if i == 0:
-                            start_row, start_col = navigation.east_south_east(row, col)
-                            self.draw_cell(start_row, start_col, kind="border")
-                    if col > 0 and row > 0:
-                        if i+1 == length:
-                            start_row, start_col = navigation.west_noeth_west(row, col-i)
-                            self.draw_cell(start_row, start_col, kind="border")
-
-                    if col > 0 and row < 9:
-                        if i + 1 == length:
-                            start_row, start_col = navigation.west_south_west(row, col-i)
-                            self.draw_cell(start_row, start_col, kind="border")
-                    if col < 9 and row > 0:
-                        if i + 1 == length:
-                            if i == 0:
-                                start_row, start_col = navigation.east_noeth_east(row, col)
-                                self.draw_cell(start_row, start_col, kind="border")
+                
+                if  self.validate_ship_size(row - 1, col, length, ship_direction, direction) == True:
+                    for i in range(length):
+                        self.draw_cell(*navigation.west_noeth_west(row, col - i), kind="border")
+                        
+                if self.validate_ship_size(row + 1, col, length, ship_direction, direction) == True:
+                    for i in range(length):
+                        self.draw_cell(*navigation.west_south_west(row, col-i), kind="border")
+                    #     start_row,start_col= navigation.north(row, col-i)
+                    #     self.draw_cell(start_row, start_col, kind="border")
+                    # if row < 9:
+                    #     start_row, start_col = navigation.south(row, col-i)
+                    #     self.draw_cell(start_row, start_col, kind="border")
+                        
+                        
+                        
+                        
+                    # if col < 9:
+                    #     if i == 0:
+                    #         start_row, start_col = navigation.west_right_center(row, col - i)
+                    #         self.draw_cell(start_row, start_col, kind="border")
+                    # if col > 0:
+                    #     if i+1 == length:
+                    #         start_row, start_col = navigation.west_left_center(row, col - i)
+                    #         self.draw_cell(start_row, start_col, kind="border")
+                    # if row <9 and col < 9:
+                    #     if i == 0:
+                    #         start_row, start_col = navigation.east_south_east(row, col)
+                    #         self.draw_cell(start_row, start_col, kind="border")
+                    # if col > 0 and row > 0:
+                    #     if i+1 == length:
+                    #         start_row, start_col = navigation.west_noeth_west(row, col-i)
+                    #         self.draw_cell(start_row, start_col, kind="border")
+                    #
+                    # if col > 0 and row < 9:
+                    #     if i + 1 == length:
+                    #         start_row, start_col = navigation.west_south_west(row, col-i)
+                    #         self.draw_cell(start_row, start_col, kind="border")
+                    # if col < 9 and row > 0:
+                    #     if i + 1 == length:
+                    #         if i == 0:
+                    #             start_row, start_col = navigation.east_noeth_east(row, col)
+                    #             self.draw_cell(start_row, start_col, kind="border")
                     
                     
                     

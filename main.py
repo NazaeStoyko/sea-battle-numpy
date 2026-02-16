@@ -7,14 +7,14 @@ def main():
 
     for _ in range(1):
         coordinates = field_user.random_coordinats()
-        row, col = field_user.parse_place(coordinates)
-        # row, col = 4,0
-        where_to_draw = field_user.where_to_draw(row, col, 1)
+        # row, col = field_user.parse_place(coordinates)
+        row, col = 0,6
+        where_to_draw = field_user.where_to_draw(row, col, 3)
         
         if where_to_draw is not None:
             ship_direction, direction = where_to_draw
             
-            field_user.draw_ship(row, col, 1, ship_direction, direction)
+            field_user.draw_ship(row, col, 3, ship_direction, direction)
             print("\n")
             
             print(field_user.field)
