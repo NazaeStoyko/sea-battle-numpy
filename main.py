@@ -5,16 +5,17 @@ import random
 def main():
     field_user = fd.Field()
 
-    for _ in range(1):
+    for _ in range(8):
         coordinates = field_user.random_coordinats()
-        # row, col = field_user.parse_place(coordinates)
-        row, col = 0,6
-        where_to_draw = field_user.where_to_draw(row, col, 3)
+        row, col = field_user.parse_place(coordinates)
+        # row, col = 5,5
+        length = 2
+        where_to_draw = field_user.where_to_draw(row, col, length)
         
         if where_to_draw is not None:
             ship_direction, direction = where_to_draw
             
-            field_user.draw_ship(row, col, 3, ship_direction, direction)
+            field_user.draw_ship(row, col, length, ship_direction, direction)
             print("\n")
             
             print(field_user.field)
@@ -27,7 +28,12 @@ def main():
             #     print(f"{i:2} " + " ".join(symbols[cell] for cell in row))
 
         else:
-
+            if field_user.where_to_draw(row, col, length) is not None:
+                ship_direction, direction = field_user.where_to_draw(row, col, length)
+                
+                placed = field_user.draw_ship(
+                    row, col, length, ship_direction, direction
+                )
             print("Ship is not valid")
 
 
