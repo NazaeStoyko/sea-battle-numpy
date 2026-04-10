@@ -1,42 +1,54 @@
 import field as fd
-import random
 
+
+def print_fields(field_user, field_bot):
+    size = len(field_user.field)
+    cell_w = 3
+
+    def header():
+        
+        return " " * (cell_w + 2) + "".join(f"{i:^{cell_w+2}}" for i in range(size))
+
+    def border():
+        return " " * (cell_w + 1) + "+" + "+".join(["-" * (cell_w+1)] * size) + "+"
+
+    def row(i, data):
+        return f"{i:>{cell_w}} " + "|" + "|".join(f"{cell:^{cell_w+1}}" for cell in data) + "|"
+
+    gap = "    "
+
+    print("USER FIELD".center(len(header())) + gap + "BOT FIELD".center(len(header())))
+    print(header() + gap + header())
+    print(border() + gap + border())
+
+    for row_index, (user_row, bot_row) in enumerate(zip(field_user.field, field_bot.field)):
+        print(row(row_index, user_row) + gap + row(row_index, bot_row))
+        print(border() + gap + border())
 
 def main():
     field_user = fd.Field()
-    
+    field_bot = fd.Field()
     ships = {1:4, 2: 3, 3: 2, 4: 1}
-   
-    for key, value in ships.items():
-        for _ in range(key):
-            coordinates = field_user.random_coordinats()
-            row, col = field_user.parse_place(coordinates)
-
-            length = value
-            where_to_draw = field_user.where_to_draw(row, col, length)
-            
-            if where_to_draw is not None:
-                ship_direction, direction = where_to_draw
+    
+    for field in (field_user, field_bot):
+        for key, value in ships.items():
+            for _ in range(key):
+                coordinates = field.random_coordinats()
+                row, col = field.parse_place(coordinates)
+    
+                length = value
+                where_to_draw = field.where_to_draw(row, col, length)
                 
-                field_user.draw_ship(row, col, length, ship_direction, direction)
-                print("\n")
-                
-                print(field_user.field)
+                if where_to_draw is not None:
+                    ship_direction, direction = where_to_draw
+                    
+                    field.draw_ship(row, col, length, ship_direction, direction)
+                    
+                else:
+      
+                    print("Ship is not valid")
     
-    
-                # symbols = {0: ".", 1: "■"}
-                # size = field_user.field.shape[1]
-                # print("   " + " ".join(f"{i}" for i in range(size)))
-                # for i, row in enumerate(field_user.field):
-                #     print(f"{i:2} " + " ".join(symbols[cell] for cell in row))
-    
-            else:
-  
-                print("Ship is not valid")
-                print("Ship is not valid")
-                print("Ship is not valid")
-
-
+    print_fields(field_user, field_bot)
 
 if __name__ == "__main__":
     main()

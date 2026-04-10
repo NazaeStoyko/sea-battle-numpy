@@ -1,11 +1,8 @@
-from curses import start_color
-
 import numpy as np
 import random
 import navigation
 from enum import IntEnum
 from enum import Enum
-from numpy.ma.extras import compress_cols
 
 
 class CellType(IntEnum):
@@ -265,8 +262,9 @@ class Field:
 		
 		self.allowed_places = np.delete(self.allowed_places, ind)
 		
-		print("Delete allowed coordinates:", unparse_coordinates)
-		print("allowed_places:", self.allowed_places)
-		print("\t")
+		# print("Delete allowed coordinates:", unparse_coordinates)
+		# print("allowed_places:", self.allowed_places)
+		#
+		
 		
 		return self.allowed_places
