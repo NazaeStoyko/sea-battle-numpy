@@ -264,7 +264,7 @@ class Field:
 		
 		# print("Delete allowed coordinates:", unparse_coordinates)
 		# print("allowed_places:", self.allowed_places)
-		#
+		
 		
 		
 		return self.allowed_places
